@@ -87,8 +87,11 @@
             this.ClientSize = new System.Drawing.Size(462, 450);
             this.Controls.Add(this.axWindowsMediaPlayer1);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmMain";
+            this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "НеСпать";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
