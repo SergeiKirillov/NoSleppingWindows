@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoSleppingWindows", "NoSleppingWindows\NoSleppingWindows.csproj", "{BF9F5941-F376-4100-BBE8-0A40314A1A02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLibenNetFramework", "..\SergeiKirillov\SeachActiveApps\MyLibenNetFramework\MyLibenNetFramework.csproj", "{23F9476C-8FAB-485B-819E-A4D33AC23A4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BF9F5941-F376-4100-BBE8-0A40314A1A02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF9F5941-F376-4100-BBE8-0A40314A1A02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF9F5941-F376-4100-BBE8-0A40314A1A02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23F9476C-8FAB-485B-819E-A4D33AC23A4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23F9476C-8FAB-485B-819E-A4D33AC23A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23F9476C-8FAB-485B-819E-A4D33AC23A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23F9476C-8FAB-485B-819E-A4D33AC23A4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -116,5 +116,11 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SergeiKirillov\SeachActiveApps\MyLibenNetFramework\MyLibenNetFramework.csproj">
+      <Project>{23f9476c-8fab-485b-819e-a4d33ac23a4f}</Project>
+      <Name>MyLibenNetFramework</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
