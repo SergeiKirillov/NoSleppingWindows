@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoSleppingWindows", "NoSlep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLibenNetFramework", "..\SergeiKirillov\SeachActiveApps\MyLibenNetFramework\MyLibenNetFramework.csproj", "{23F9476C-8FAB-485B-819E-A4D33AC23A4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivePC", "ActivePC\ActivePC.csproj", "{526916D0-4FCD-4034-BFE7-86CB01A6D483}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{23F9476C-8FAB-485B-819E-A4D33AC23A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23F9476C-8FAB-485B-819E-A4D33AC23A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23F9476C-8FAB-485B-819E-A4D33AC23A4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{526916D0-4FCD-4034-BFE7-86CB01A6D483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{526916D0-4FCD-4034-BFE7-86CB01A6D483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{526916D0-4FCD-4034-BFE7-86CB01A6D483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{526916D0-4FCD-4034-BFE7-86CB01A6D483}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
