@@ -63,6 +63,16 @@ namespace ActivePC.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         /// </summary>
+        internal static System.Drawing.Icon _5_tablichka_ne_spat_skachat_i_raspechatat {
+            get {
+                object obj = ResourceManager.GetObject("_5_tablichka_ne_spat_skachat_i_raspechatat", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
         internal static System.Drawing.Icon green {
             get {
                 object obj = ResourceManager.GetObject("green", resourceCulture);

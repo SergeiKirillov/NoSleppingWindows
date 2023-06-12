@@ -31,162 +31,263 @@ namespace ActivePC
         public static MenuItem mnuExit;
         public static MenuItem mnuStart;
         public static MenuItem mnuStop;
+        public static MenuItem mnuSetting;
         public static NotifyIcon notificationIcon;
 
         static WorkingReestr reestr;
 
+        static bool exitRequested = false;
+
+
         static void Main(string[] args)
         {
-            reestr = new WorkingReestr("ActivePC");
-
-            System.Diagnostics.Debug.WriteLine("Старт программы НЕ СПАТЬ!!");
-
-
-            if (isStillRunning()) //Если запустили второй раз то показываем форму ввода пароля
+            try
             {
-                System.Diagnostics.Debug.WriteLine("второй раз");
 
-                frmSetting setting = new frmSetting();
-
-                if (setting.Visible)
+                Console.CancelKeyPress += (sender, e) =>
                 {
-                    setting.Focus();
+                    e.Cancel = true; // Предотвращает завершение приложения сразу после обработки сигнала
+                    exitRequested = true; // Устанавливает флаг завершения
+                };
+
+                AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
+                {
+                    // Код, который должен выполниться перед завершением приложения
+                    //System.Diagnostics.Debug.WriteLine("Завершение программы программы НЕ СПАТЬ!!");
+                    MyIOFile.WriteFileTXT(DateTime.Now, "Завершение программы сигналом EXIT", "ActivePC");
+                    notificationIcon.Dispose();
+                };
+
+
+                reestr = new WorkingReestr("ActivePC");
+
+                System.Diagnostics.Debug.WriteLine("Старт программы НЕ СПАТЬ!!");
+
+
+                if (isStillRunning()) //Если запустили второй раз то показываем форму ввода пароля
+                {
+                    System.Diagnostics.Debug.WriteLine("второй раз");
+
+                    frmSetting setting = new frmSetting();
+
+                    if (setting.Visible)
+                    {
+                        setting.Focus();
+                    }
+                    else
+                    {
+                        setting.ShowDialog();         
+                    }
+
                 }
                 else
                 {
-                    setting.ShowDialog();         
-                }
+                    #region //NotifyIcon 1 - Иконка в системном трее
 
+                    //notifyIcon = new NotifyIcon();
+                    ////notifyIcon.Icon = new System.Drawing.Icon(myIcon.ico);
+                    //notifyIcon.Icon = Properties.Resources.red;
+                    //notifyIcon.Text = "Не спать";
+
+                    //// Создание контекстного меню для иконки
+                    //ContextMenu contextMenu = new ContextMenu();
+                    //contextMenu.MenuItems.Add("Открыть", openCliked);
+                    //contextMenu.MenuItems.Add("Выход", exitClicked);
+                    //notifyIcon.ContextMenu = contextMenu;
+
+
+                    //// Установка текста и обработчиков событий при наведении на иконку
+                    //notifyIcon.MouseMove += NotifyIcon_MouseMove;
+
+                    //// Отображение иконки в системном трее
+                    //notifyIcon.Visible = true;
+
+
+
+
+
+                    #endregion
+
+                    #region NotifyIcon 2 - Иконка в системном трее
+                    Thread notifyThred = new Thread(
+                        delegate ()
+                        {
+                            menu = new ContextMenu();
+                            mnuExit = new MenuItem("Exit");
+                            mnuSetting = new MenuItem("Настройка");
+                            mnuStart = new MenuItem("Старт");
+                            mnuStop = new MenuItem("Стоп");
+                            mnuStart.Enabled = false;
+                            mnuStop.Enabled = true;
+                            menu.MenuItems.Add(0, mnuExit);
+                            menu.MenuItems.Add(1, mnuSetting);
+                            menu.MenuItems.Add(2, mnuStart);
+                            menu.MenuItems.Add(3, mnuStop);
+
+                            notificationIcon = new NotifyIcon()
+                            {
+                                Icon = Properties.Resources.green,
+                                //Icon = reestr.GetBool("blStat") ? Properties.Resources.green : Properties.Resources.red, //https://stackoverflow.com/questions/90697/how-to-create-and-use-resources-in-net
+                                ContextMenu = menu,
+                                Text = "Main"
+                            };
+                            mnuExit.Click += new EventHandler(mnuExit_Click);
+                            mnuSetting.Click += new EventHandler(mnuSetting_Click);
+                            mnuStart.Click += new EventHandler(MnuStart_Click);
+                            mnuStop.Click += new EventHandler(MnuStop_Click);
+
+                            notificationIcon.Visible = true;
+                            Application.Run();
+                        }
+                        );
+                    notifyThred.Start();
+                    #endregion
+
+                    clWinAPI.HideConsoleApp(true); //Прячем программу
+
+                    //// Создание и запуск фонового процесса //----------------------- АРР
+                    //Process backgroundProcess = new Process();//----------------------- АРР
+
+                    //backgroundProcess.StartInfo.FileName = "calc.exe";//----------------------- АРР
+                    //backgroundProcess.Start();//----------------------- АРР
+
+
+                    //bool blStat = true;
+                    reestr.SetBool("blStat", true);
+                    //notificationIcon.Icon?.Dispose();
+                    //notificationIcon.Icon = reestr.GetBool("blStat") ? Properties.Resources.green : Properties.Resources.red; //https://stackoverflow.com/questions/90697/how-to-create-and-use-resources-in-net
+                    MyIOFile.WriteFileTXT(DateTime.Now, "СTAРТ", "ActivePC");
+
+                    // Предотвращение перехода в режим ожидания
+                    SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
+                    while (true)
+                    {
+
+                        // Ваш код, выполняющийся в фоновом процессе
+                        //if ((DateTime.Now.Hour == 8) && (DateTime.Now.Minute == 00))
+                        //{
+                        //    reestr.SetBool("blStat", false);
+
+                        //}
+                        //else
+                        //{
+                        //    // blStat = true;
+                        //}
+
+                        if (reestr.GetBool("8Hour"))
+                        {
+                            if ((DateTime.Now.Hour == 17) && (DateTime.Now.Minute == 00))
+                            {
+                                reestr.SetBool("blStat", false);
+
+                            }
+                        }
+
+                        if (reestr.GetBool("12Hour"))
+                        {
+                            if (((DateTime.Now.Hour == 7) || (DateTime.Now.Hour == 19)) && (DateTime.Now.Minute == 00))
+                            {
+                                reestr.SetBool("blStat", false);
+
+                            }
+                        }
+
+                        //notificationIcon.Icon?.Dispose();
+
+                        if (notificationIcon !=null) //Обработка ошибки  System.NullReferenceException: "Ссылка на объект не указывает на экземпляр объекта."
+                        {
+                            notificationIcon.Icon = reestr.GetBool("blStat") ? Properties.Resources.green : Properties.Resources.red; //https://stackoverflow.com/questions/90697/how-to-create-and-use-resources-in-net
+                        }
+                        
+                        if (reestr.GetBool("blStat"))
+                        {
+                            SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
+                            mnuStart.Enabled = false;
+                            mnuStop.Enabled = true;
+                        }
+                        else
+                        {
+                            //backgroundProcess.Close(); ----------------------- АРР
+                            // Восстановление нормального режима энергосбережения
+                            SetThreadExecutionState(ES_CONTINUOUS);
+                            //      System.Diagnostics.Debug.WriteLine("Восстановление нормального режима энергосбережения");
+                            //      System.Diagnostics.Debug.WriteLine("Фоновый процесс завершен." + DateTime.Now.ToString());
+                            //      Console.ReadLine();
+
+                            mnuStart.Enabled = true;
+                            mnuStop.Enabled = false;
+
+                            //Environment.Exit(0); //Выходим из приложения
+                        }
+                    
+                        Thread.Sleep(60000);//1min
+
+                    }
+
+                    //notifyIcon.Visible = false;
+                    //notifyIcon.Dispose();
+
+                    //notificationIcon.Visible= false;
+                    //notificationIcon.Dispose();
+                    //Environment.Exit(0);
+
+
+
+                    // Далее, в необходимых местах, проверяйте флаг exitRequested и завершайте приложение, если он установлен
+                    if (exitRequested)
+                    {
+                        // Код завершения приложения
+                        //System.Diagnostics.Debug.WriteLine("Завершение программы сигналом из системы НЕ СПАТЬ!!");
+                        MyIOFile.WriteFileTXT(DateTime.Now, "Завершение программы сигналом из системы ", "ActivePC");
+                        notificationIcon.Dispose();
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                notificationIcon.Dispose();
+            }
+
+
+        }
+
+        private static void mnuSetting_Click(object sender, EventArgs e)
+        {
+            //System.Diagnostics.Debug.WriteLine("второй раз");
+            MyIOFile.WriteFileTXT(DateTime.Now, "Запуск окна настройки программы", "ActivePC");
+
+            frmSetting setting = new frmSetting();
+
+            if (setting.Visible)
+            {
+                setting.Focus();
             }
             else
             {
-                #region //NotifyIcon 1 - Иконка в системном трее
-
-                //notifyIcon = new NotifyIcon();
-                ////notifyIcon.Icon = new System.Drawing.Icon(myIcon.ico);
-                //notifyIcon.Icon = Properties.Resources.red;
-                //notifyIcon.Text = "Не спать";
-
-                //// Создание контекстного меню для иконки
-                //ContextMenu contextMenu = new ContextMenu();
-                //contextMenu.MenuItems.Add("Открыть", openCliked);
-                //contextMenu.MenuItems.Add("Выход", exitClicked);
-                //notifyIcon.ContextMenu = contextMenu;
-
-
-                //// Установка текста и обработчиков событий при наведении на иконку
-                //notifyIcon.MouseMove += NotifyIcon_MouseMove;
-
-                //// Отображение иконки в системном трее
-                //notifyIcon.Visible = true;
-
-
-
-
-
-                #endregion
-
-                #region NotifyIcon 2 - Иконка в системном трее
-                Thread notifyThred = new Thread(
-                    delegate ()
-                    {
-                        menu = new ContextMenu();
-                        mnuExit = new MenuItem("Exit");
-                        mnuStart = new MenuItem("Старт");
-                        mnuStop = new MenuItem("Стоп");
-                        menu.MenuItems.Add(0, mnuExit);
-                        menu.MenuItems.Add(1, mnuStart);
-                        menu.MenuItems.Add(2, mnuStop);
-
-                        notificationIcon = new NotifyIcon()
-                        {
-                            Icon = Properties.Resources.green,
-                            ContextMenu = menu,
-                            Text = "Main"
-                        };
-                        mnuExit.Click += new EventHandler(mnuExit_Click);
-                        mnuStart.Click += new EventHandler(MnuStart_Click);
-                        mnuStop.Click += new EventHandler(MnuStop_Click);
-
-                        notificationIcon.Visible = true;
-                        Application.Run();
-                    }
-                    );
-                notifyThred.Start();
-                #endregion
-
-                clWinAPI.HideConsoleApp(true); //Прячем программу
-
-                // Создание и запуск фонового процесса
-                Process backgroundProcess = new Process();
-
-                backgroundProcess.StartInfo.FileName = "calc.exe";
-                backgroundProcess.Start();
-
-
-                //bool blStat = true;
-                reestr.SetBool("blStat", true);
-
-                // Предотвращение перехода в режим ожидания
-                SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
-                while (true)
-                {
-                    // Ваш код, выполняющийся в фоновом процессе
-                    if ((DateTime.Now.Hour == 12) && (DateTime.Now.Minute == 35))
-                    {
-                        reestr.SetBool("blStat", false);
-                    }
-                    else
-                    {
-                        // blStat = true;
-                    }
-
-                    if (reestr.GetBool("blStat"))
-                    {
-                        //notifyIcon.Icon = Properties.Resources.green;
-                        notificationIcon.Icon = Properties.Resources.green;
-                    }
-                    else
-                    {
-                        //notifyIcon.Icon = Properties.Resources.red;
-                        notificationIcon.Icon = Properties.Resources.red;
-                        backgroundProcess.Close();
-                        // Восстановление нормального режима энергосбережения
-                        SetThreadExecutionState(ES_CONTINUOUS);
-                        System.Diagnostics.Debug.WriteLine("Восстановление нормального режима энергосбережения");
-                        System.Diagnostics.Debug.WriteLine("Фоновый процесс завершен." + DateTime.Now.ToString());
-                        //Console.ReadLine();
-
-
-
-                        //Environment.Exit(0); //Выходим из приложения
-                    }
-
-                    Thread.Sleep(60000);
-
-                }
-
-                //notifyIcon.Visible = false;
-                //notifyIcon.Dispose();
-
-                //notificationIcon.Visible= false;
-                //notificationIcon.Dispose();
-                //Environment.Exit(0);
-
-
+                setting.ShowDialog();
             }
-
-
         }
 
         private static void MnuStop_Click(object sender, EventArgs e)
         {
             reestr.SetBool("blStat", false);
+            mnuStart.Enabled = true;
+            mnuStop.Enabled = false;
+            MyIOFile.WriteFileTXT(DateTime.Now, "Стоп", "ActivePC");
         }
 
         private static void MnuStart_Click(object sender, EventArgs e)
         {
             reestr.SetBool("blStat", true);
+            mnuStart.Enabled = false;
+            mnuStop.Enabled = true;
+            MyIOFile.WriteFileTXT(DateTime.Now, "Старт", "ActivePC");
         }
 
         private static void mnuExit_Click(object sender, EventArgs e)
@@ -226,5 +327,7 @@ namespace ActivePC
             else
                 return false;
         }
+
+
     }
 }
