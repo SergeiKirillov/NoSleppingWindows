@@ -180,6 +180,8 @@ namespace ActivePC
                             {
                                 reestr.SetBool("blStat", false);
 
+                                MyIOFile.WriteFileTXT(DateTime.Now, "Завершение программы в 17", "ActivePC");
+
                             }
                         }
 
@@ -189,6 +191,7 @@ namespace ActivePC
                             {
                                 reestr.SetBool("blStat", false);
 
+                                MyIOFile.WriteFileTXT(DateTime.Now, "Завершение программы в 7/19", "ActivePC");
                             }
                         }
 
@@ -204,6 +207,7 @@ namespace ActivePC
                             SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
                             mnuStart.Enabled = false;
                             mnuStop.Enabled = true;
+
                         }
                         else
                         {
@@ -213,6 +217,7 @@ namespace ActivePC
                             //      System.Diagnostics.Debug.WriteLine("Восстановление нормального режима энергосбережения");
                             //      System.Diagnostics.Debug.WriteLine("Фоновый процесс завершен." + DateTime.Now.ToString());
                             //      Console.ReadLine();
+
 
                             mnuStart.Enabled = true;
                             mnuStop.Enabled = false;
